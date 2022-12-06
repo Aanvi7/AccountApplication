@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+
+  configserver:
+    image: shubh/configserver:latest
+    mem_limit: 700m
+    ports:
+      - "8888:8888"
+    networks:
+     - eazybank
+      
+  accounts:
+    image: shubh/accountapp:latest
+    mem_limit: 700m
+    ports:
+      - "8081:8081"
+    networks:
+      - eazybank
+    depends_on:
+      - configserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8888/
+  
+  loans:
+    image: shubh/loans:latest
+    mem_limit: 700m
+    ports:
+      - "8082:8082"
+    networks:
+      - eazybank
+    depends_on:
+      - configserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8888/
+    
+  cards:
+    image: shubh/cards:latest
+    mem_limit: 700m
+    ports:
+      - "8083:8083"
+    networks:
+      - eazybank
+    depends_on:
+      - configserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8888/
+      
+networks:
+  eazybank:

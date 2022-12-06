@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+
+  accounts:
+    image: shubh/accountapp:latest
+    mem_limit: 700m
+    ports:
+      - "8081:8081"
+    networks:
+      - eazybank-network
+  configserver:
+    image: shubh/configserver:latest
+    mem_limit: 700m
+    ports:
+      - "8888:8888"
+    networks:
+      - eazybank-network    
+    
+  loans:
+    image: shubh/loans:latest
+    mem_limit: 700m
+    ports:
+      - "8083:8083"
+    networks:
+      - eazybank-network
+    
+  cards:
+    image: shubh/cards:latest
+    mem_limit: 700m
+    ports:
+      - "8082:8082"
+    networks:
+      - eazybank-network
+    
+networks:
+  eazybank-network:
